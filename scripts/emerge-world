@@ -1,0 +1,99 @@
+#!/bin/bash
+# Copyright (c) 2005, Denis Sacchet
+# All rights reserved.
+# $Header: $
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# 
+#     * Redistributions of source code must retain the above copyright notice,
+#     * this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above copyright
+#     * notice, this list of conditions and the following disclaimer in the
+#     * documentation and/or other materials provided with the distribution.
+#     * Neither the name of the <ORGANIZATION> nor the names of its
+#     * contributors may be used to endorse or promote products derived from
+#     * this software without specific prior written permission.
+# 
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+
+if [ -r /etc/conf.d/server-tools ] 
+then
+	source /etc/conf.d/server-tools
+else
+	echo "Il faut créer le fichier /etc/conf.d/server-tools"
+	echo "et le paramétrer correctement"
+	exit 1
+fi
+
+if [ -z "${MAILING_LIST_REPORT}" ]
+then
+	echo "Il faut créer le fichier /etc/conf.d/server-tools"
+	echo "et le paramétrer correctement"
+	exit 1
+fi
+
+if [ -z "${EMERGE_WORLD_LOG}" ]
+then
+	echo "Il faut créer le fichier /etc/conf.d/server-tools"
+	echo "et le paramétrer correctement"
+	exit 1
+fi
+
+DATE=`date +'%Y/%m/%d %H:%M'`
+
+( /bin/echo "Serveur : `cat /etc/hostname`"
+/bin/echo "Date : ${DATE}"
+/bin/echo "Operation : Mise à jour des packages"
+/bin/echo "Liste des destinataires : ${MAILING_LIST_REPORT}"
+/bin/echo
+/bin/echo -n "Remontage de /usr en mode rw ... "
+/bin/sync
+/bin/mount -o remount,rw /usr
+if [ $? -ne 0 ]
+then
+	/bin/echo "NOT OK [$?]"
+	exit 1
+else
+	/bin/echo "OK"
+fi
+/bin/echo
+/bin/echo -n "Mise ç jour des packages ... "
+/bin/echo >> "${EMERGE_WORLD_LOG}"
+/bin/echo "DATE: ${DATE}" >> "${EMERGE_WORLD_LOG}"
+/bin/echo "----------------------" >> "${EMERGE_WORLD_LOG}"
+/bin/echo >> "${EMERGE_WORLD_LOG}"
+/usr/bin/emerge -Du world >> "${EMERGE_WORLD_LOG}" 2> /dev/null
+if [ $? -ne 0 ]
+then
+	/bin/echo "NOT OK [$?]"
+else
+	/bin/echo "OK"
+fi
+/bin/echo
+/bin/echo "Le fichier de log se trouve ici :"
+/bin/echo "  `cat /etc/hostname`:${EMERGE_WORLD_LOG}"
+/bin/echo
+/bin/echo "Voici la liste des messages données par les ebuilds :"
+DATE=`echo "${DATE}" | sed 's@\/@\\\/@g'`
+sed -e "1,/DATE: ${DATE}/d" emerge-world.log | egrep "^ \*" | sed "s@ \* @  @"
+/bin/echo
+/bin/echo -n "Remontage de /usr en mode ro ... "
+/bin/mount -o remount,ro /usr
+if [ $? -ne 0 ]
+then
+	/bin/echo "NOT OK [$?]"
+else
+	/bin/echo "OK"
+fi
+) | /bin/mail -s "[IT] `cat /etc/hostname` - ${DATE} - EMERGE WORLD" "${MAILING_LIST_REPORT}"

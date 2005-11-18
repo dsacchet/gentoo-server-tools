@@ -1,0 +1,14 @@
+# Liste des destinataires des mails récaputilatifs
+MAILING_LIST_REPORT="'Denis Sacchet' <user@domain.com>"
+
+# Liste des destinataires des mails d'alerte
+MAILING_LIST_ALERT="'Denis Sacchet' <user@domain.com>"
+
+# Pourcentage de l'espace disque au dessus duquel une erreur est générée
+MINIMUM_SPACE=95
+
+# Fichier de log pour le emerge world
+EMERGE_WORLD_LOG=/root/emerge-world.log
+
+# Serveur rsync pour l'arbre de portage custom
+CUSTOM_RSYNC=rsync://<ip or hostname>/gentoo

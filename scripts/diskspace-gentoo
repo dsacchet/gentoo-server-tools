@@ -1,0 +1,73 @@
+#!/bin/bash
+# Copyright (c) 2005, Denis Sacchet
+# All rights reserved.
+# $Header: $
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# 
+#     * Redistributions of source code must retain the above copyright notice,
+#     * this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above copyright
+#     * notice, this list of conditions and the following disclaimer in the
+#     * documentation and/or other materials provided with the distribution.
+#     * Neither the name of the <ORGANIZATION> nor the names of its
+#     * contributors may be used to endorse or promote products derived from
+#     * this software without specific prior written permission.
+# 
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+
+if [ -r /etc/conf.d/server-tools ] 
+then
+	source /etc/conf.d/server-tools
+else
+	echo "Il faut créer le fichier /etc/conf.d/server-tools"
+	exit 1
+fi
+
+if [ -z "${MAILING_LIST_ALERT}" ]
+then
+	echo "Il faut créer le fichier /etc/conf.d/server-tools"
+	echo "et le paramétrer correctement"
+	echo "Il manque le paramètre 'MAILING_LIST_ALERT'"
+	exit 1
+fi
+
+if [ -z "${MINIMUM_SPACE}" ]
+then
+	echo "Il faut créer le fichier /etc/conf.d/server-tools"
+	echo "et le paramétrer correctement"
+	echo "Il manque le paramètre 'MINIMUM_SPACE'"	
+	exit 1
+fi
+
+source /etc/conf.d/hostname
+
+DATE=`date +'%Y/%m/%d %H:%M'`
+(df | sed '1d' | sed 's@^\([^ ]*\).* \([0-9]*\)% .*$@\1 \2@') | \
+while read info
+do
+	PARTITION=`echo $info | cut -d " " -f 1`
+	PERCENTAGE=`echo $info | cut -d " " -f 2`
+	if [ $PERCENTAGE -gt $MINIMUM_SPACE ]
+	then
+		( /bin/echo "Serveur : ${HOSTNAME}"
+		/bin/echo "Date : ${DATE}"
+		/bin/echo "Operation : Vérification espace disque"
+		/bin/echo "Liste des destinataires : ${MAILING_LIST_ALERT}"
+		/bin/echo
+		/bin/echo "Partition $PARTITION pleine à $PERCENTAGE %"
+		/bin/echo "Il faut faire de la place"
+		) | /bin/mail -s "[IT] ${HOSTNAME} - ${DATE} - DISK FULL ${PARTITION}" "${MAILING_LIST_ALERT}"
+	fi
+done

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+<herd>sysadmin</herd>
+<maintainer>
+  <email>ouba@ouba.org</email>
+</maintainer>
+<longdescription>This package could be use to facilate the maintenance of several gentoo linux by monitoring update needs, disk space, minimal security checks, etc ...</longdescription>
+</pkgmetadata>

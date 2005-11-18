@@ -1,0 +1,15 @@
+1.0 : * Version initiale
+1.1 : * Ajout du fichier de configuration
+      * Ajout du script emerge-world
+1.2 : * Ajout de la synchronisation avec un arbre portage propriétaire
+1.3 : * Vérification de l'utilisateur exécutant le script
+      * Prise en compte du nouveau baselayout pour le hostname
+      * Mise à jour des MAILING_LIST en raison de la distinction entre
+        les mailing list report et alert
+      * Amélioration de la gestion du ro et rw sur le point de montage
+        /usr
+      * Réorganisation de l'arborescence du projet avec la création d'un
+        sous-répertoire ebuild et d'un sous-répertoire scripts
+      * Création d'un ebuild pour la gentoo
+      * Création d'un script de génération d'archive .tar.gz avec le bon
+        nom du fichier à partir du fichier VERSION
