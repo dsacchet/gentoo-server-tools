@@ -1,8 +1,8 @@
 # Liste des destinataires des mails récaputilatifs
-MAILING_LIST_REPORT="'Denis Sacchet' <user@domain.com>"
+MAILING_LIST_REPORT="'Prenom Nom' <user@domain.com>"
 
 # Liste des destinataires des mails d'alerte
-MAILING_LIST_ALERT="'Denis Sacchet' <user@domain.com>"
+MAILING_LIST_ALERT="'Prenom Nom' <user@domain.com>"
 
 # Pourcentage de l'espace disque au dessus duquel une erreur est générée
 MINIMUM_SPACE=95

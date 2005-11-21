@@ -13,11 +13,19 @@ KEYWORDS="~x86"
 IUSE=""
 
 DEPEND="app-forensics/chkrootkit
-       virtual/mta
-       virtual/cron"
+	virtual/mta
+	virtual/cron"
 
 S=${WORKDIR}/${P}
 
 src_install() {
-
+	exeinto /etc/cron.daily
+	doexe scripts/clean-gentoo
+	doexe scripts/firewall-gentoo
+	doexe scripts/security-gentoo
+	doexe scripts/update-gentoo
+	exeinto /etc/cron.hourly
+	doexe script/diskspace-gentoo
+	insinto /etc/conf.d
+	newins scripts/server-tools
 }
