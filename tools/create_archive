@@ -30,5 +30,11 @@
 
 cd `dirname $0`
 mkdir server-tools-`cat ../VERSION`
-cp -r ../* server-tools-`cat ../VERSION`
+ls --color=none .. | while read file;
+do
+	if [ "$file" != "tools"]
+	then
+		cp -r ../"$file" server-tools-`cat ../VERSION`
+	fi
+done;
 tar -zcvf server-tools-`cat ../VERSION`.tar.gz server-tools-`cat ../VERSION`
