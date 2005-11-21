@@ -28,11 +28,12 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-cd `dirname $0`
+SCRIPT_DIR=`dirname "${0}"`
+cd "${SCRIPT_DIR}"
 mkdir server-tools-`cat ../VERSION`
 ls --color=none .. | while read file;
 do
-	if [ "$file" != "tools"]
+	if [ "$file" != "tools" ]
 	then
 		cp -r ../"$file" server-tools-`cat ../VERSION`
 	fi
