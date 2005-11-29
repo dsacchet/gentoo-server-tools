@@ -54,11 +54,12 @@ fi
 source /etc/conf.d/hostname
 
 DATE=`date +'%Y/%m/%d %H:%M'`
-(df | sed '1d' | sed 's@^\([^ ]*\).* \([0-9]*\)% .*$@\1 \2@') | \
+(df -l | sed '1d' | sed 's@^\([^ ]*\).* \([0-9]*\)% \(.*\)$@\1 \2 \3@') | \
 while read info
 do
 	PARTITION=`echo $info | cut -d " " -f 1`
 	PERCENTAGE=`echo $info | cut -d " " -f 2`
+	MOUNT_POINT=`echo $info | cut -d " " -f 3`
 	if [ $PERCENTAGE -gt $MINIMUM_SPACE ]
 	then
 		( /bin/echo "Serveur : ${HOSTNAME}"
@@ -66,7 +67,7 @@ do
 		/bin/echo "Operation : Vérification espace disque"
 		/bin/echo "Liste des destinataires : ${MAILING_LIST_ALERT}"
 		/bin/echo
-		/bin/echo "Partition $PARTITION pleine à $PERCENTAGE %"
+		/bin/echo "Partition $PARTITION montée en $MOUNT_POINT pleine à $PERCENTAGE %"
 		/bin/echo "Il faut faire de la place"
 		) | /bin/mail -s "[IT] ${HOSTNAME} - ${DATE} - DISK FULL ${PARTITION}" "${MAILING_LIST_ALERT}"
 	fi
