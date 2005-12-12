@@ -50,7 +50,7 @@ then
 	exit 1
 fi
 
-if [ -x /usr/sbin/chkrootkit ]
+if [ ! -x /usr/sbin/chkrootkit ]
 then
 	echo "Le programme chkrootkit doit être installé pour"
 	echo "pouvoir utiliser ce script"
