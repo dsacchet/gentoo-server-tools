@@ -43,8 +43,10 @@ then
 	exit 1
 fi
 
+source /etc/conf.d/hostname
+
 DATE=`/bin/date +'%Y/%m/%d %H:%M'`
-( /bin/echo "Serveur : `/bin/cat /etc/hostname`"
+( /bin/echo "Serveur : ${HOSTNAME}"
 /bin/echo "Date : ${DATE}"
 /bin/echo "Operation : Volume de rejet sur le firewall"
 /bin/echo "Liste des destinataires : ${MAILING_LIST}"

@@ -13,3 +13,6 @@
       * Création d'un ebuild pour la gentoo
       * Création d'un script de génération d'archive .tar.gz avec le bon
         nom du fichier à partir du fichier VERSION
+1.3.1 : * Correction d'un bug sur la détection de chkrootkit
+        * Ajout du point de montage dans diskspace
+        * Mise à jour du script firewall
