@@ -12,3 +12,6 @@ EMERGE_WORLD_LOG=/root/emerge-world.log
 
 # Serveur rsync pour l'arbre de portage custom
 CUSTOM_RSYNC=rsync://<ip or hostname>/gentoo
+
+# Nombre de jours au delà duquel il faut supprimer les fichiers
+CLEANING_DAYS_LIMIT=1

@@ -72,8 +72,13 @@ then
 	/bin/echo "OK"
 fi
 /bin/echo
-/bin/echo -n "Suppression des fichiers dans /usr/portage/distfiles (`find /usr/portage/distfiles | wc -l` fichiers, `du -skh /usr/portage/distfiles`) ... "
-/bin/rm -rf /usr/portage/distfiles/* &> /dev/null
+FILELIST=`find /usr/portage/distfiles -mtime +${CLEANING_DAYS_LIMIT}`
+/bin/echo -n "Suppression des fichiers dans /usr/portage/distfiles (`echo $FILELIST | wc -l` fichiers, `du -skh $FILELIST | tail -n 1 | cut -f 1`) ... "
+(echo $FILELIST) | while read file;
+do
+	/bin/rm -rf "$file"
+done
+FILELIST=
 if [ $? -ne 0 ]
 then
 	/bin/echo "NOT OK [$?]"
@@ -93,8 +98,13 @@ then
 	fi
 fi
 /bin/echo
-/bin/echo -n "Suppression des fichiers dans /tmp (`find /tmp | wc -l` fichiers, `du -skh /tmp | cut -f 1`) ... "
-/bin/rm -rf /tmp/*
+FILELIST=`find /tmp -mtime +${CLEANING_DAYS_LIMIT}`
+/bin/echo -n "Suppression des fichiers dans /tmp (`echo $FILELIST | wc -l` fichiers, `du -skh $FILELIST | tail -n 1 | cut -f 1`) ... "
+(echo $FILELIST) | while read file;
+do
+	/bin/rm -rf "$file"
+done
+FILELIST=
 if [ $? -ne 0 ]
 then
 	/bin/echo "NOT OK [$?]"
@@ -102,8 +112,13 @@ else
 	/bin/echo "OK"
 fi
 /bin/echo
-/bin/echo -n "Suppression des fichiers dans /var/tmp (`find /var/tmp | wc -l` fichiers, `du -skh /var/tmp | cut -f 1`) ... "
-/bin/rm -rf /var/tmp/*
+FILELIST=`find /var/tmp -mtime +${CLEANING_DAYS_LIMIT}`
+/bin/echo -n "Suppression des fichiers dans /var/tmp (`echo $FILELIST | wc -l` fichiers, `du -skh $FILELIST | tail -n 1 | cut -f 1`) ... "
+(echo $FILELIST) | while read file;
+do
+	/bin/rm -rf "$file"
+done
+FILELIST=
 if [ $? -ne 0 ]
 then
 	/bin/echo "NOT OK [$?]"
