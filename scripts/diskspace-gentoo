@@ -54,7 +54,7 @@ fi
 source /etc/conf.d/hostname
 
 DATE=`date +'%Y/%m/%d %H:%M'`
-(df -l | sed '1d' | sed 's@^\([^ ]*\).* \([0-9]*\)% \(.*\)$@\1 \2 \3@') | \
+(df -kP | sed '1d' | sed 's@^\([^ ]*\).* \([0-9]*\)% \(.*\)$@\1 \2 \3@') | \
 while read info
 do
 	PARTITION=`echo $info | cut -d " " -f 1`
